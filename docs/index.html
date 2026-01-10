@@ -253,18 +253,19 @@
 
         .download-btn {
             background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.6rem 1rem;
+            color: #000000;
+            border: 2px solid var(--accent);
+            padding: 0.6rem 1.25rem;
             border-radius: 8px;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
 
         .download-btn:hover {
-            background: var(--accent-hover);
+            background: transparent;
+            color: var(--accent);
         }
 
         .download-buttons {
@@ -274,31 +275,34 @@
         }
 
         .download-btn.secondary {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
         }
 
         .download-btn.secondary:hover {
-            background: var(--bg-card);
-            border-color: var(--accent);
+            background: var(--accent);
+            color: #000000;
         }
 
         .reprocess-btn {
             margin-top: 1rem;
             background: var(--accent);
             color: #000000;
-            border: none;
+            border: 2px solid var(--accent);
             padding: 0.75rem 1.5rem;
             border-radius: 8px;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
         }
 
         .reprocess-btn:hover {
-            opacity: 0.9;
+            background: transparent;
+            color: var(--accent);
+            border-color: var(--accent);
         }
 
         /* Privacy & Compliance Styles */
@@ -557,6 +561,7 @@
             <div class="upload-icon">📄</div>
             <div class="upload-text">Drop your document here</div>
             <div class="upload-hint">or click to browse • PDF, DOCX, XLSX, CSV supported</div>
+            <div class="upload-hint" style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-secondary);">One document at a time</div>
             <input type="file" class="file-input" id="fileInput" accept=".pdf,.docx,.xlsx,.xls,.csv">
         </div>
 
@@ -577,6 +582,9 @@
 
         <div class="config-section">
             <div class="config-title">Configuration</div>
+            <div class="refresh-notice" id="refreshNotice" style="display: none; background: rgba(0, 243, 84, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+                <strong style="color: var(--accent);">Privacy Notice:</strong> Since AI Chunkenizer doesn't store any data, you need to refresh your browser to upload a different document.
+            </div>
             <div class="config-row">
                 <div class="config-item">
                     <label for="maxTokens">Max Tokens per Chunk</label>
@@ -602,6 +610,10 @@
 
             <div class="chunks-header">
                 <div class="chunks-title">Chunks</div>
+            </div>
+
+            <div class="download-section" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                <div class="download-label" style="font-size: 0.95rem; color: var(--text-secondary);">Download chunks as:</div>
                 <div class="download-buttons">
                     <button class="download-btn" id="downloadJson">JSON</button>
                     <button class="download-btn secondary" id="downloadTxt">TXT</button>
@@ -862,8 +874,9 @@
                 window.rawExtractedText = text;
                 window.currentFileName = file.name;
 
-                // Show reprocess button
+                // Show reprocess button and refresh notice
                 document.getElementById('reprocessBtn').style.display = 'block';
+                document.getElementById('refreshNotice').style.display = 'block';
 
                 // Display stats
                 const statsGrid = document.getElementById('statsGrid');

@@ -2,6 +2,35 @@
 
 **A product of VIEWVALUE LLC**
 
+---
+
+> ## ⚠️ IMPORTANT LEGAL NOTICE - READ BEFORE USE
+>
+> **By cloning, downloading, or using this software, you agree to the following:**
+>
+> 1. **LOCAL EXECUTION ONLY** - This software is designed to run 100% locally on your device. All document processing happens on YOUR machine. No data is sent to external servers.
+>
+> 2. **NO LIABILITY FOR USE** - VIEWVALUE LLC, EPH4, and all contributors are NOT LIABLE for any use, misuse, or consequences arising from the use of this software. This includes but is not limited to: data loss, security breaches, compliance violations, or damages of any kind.
+>
+> 3. **INTEGRATION DISCLAIMER** - If you integrate this software into your own applications, products, services, or systems:
+>    - YOU assume ALL responsibility for that integration
+>    - YOU are solely responsible for ensuring compliance with applicable laws (GDPR, HIPAA, SOC2, etc.)
+>    - YOU must conduct your own security assessment
+>    - VIEWVALUE LLC provides NO WARRANTY that this software is suitable for your use case
+>    - VIEWVALUE LLC is NOT RESPONSIBLE for how you use, modify, or distribute derivative works
+>
+> 4. **AS-IS SOFTWARE** - This software is provided "AS IS" without warranty of any kind. See full [Legal Disclaimer](#legal-disclaimer) below.
+>
+> 5. **USER RESPONSIBILITY** - You are solely responsible for:
+>    - Evaluating whether this software meets your requirements
+>    - Verifying output accuracy before use in production
+>    - Compliance with your jurisdiction's laws and regulations
+>    - Security of any data you process
+>
+> **If you do not agree to these terms, do not use this software.**
+
+---
+
 Fast, token-aware document chunking for RAG pipelines.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)

@@ -22,6 +22,41 @@ SOFTWARE.
 
 ---
 
+ADDITIONAL TERMS AND DISCLAIMERS
+
+1. LOCAL EXECUTION DESIGN
+   This software is designed to run entirely on the user's local device.
+   No data is transmitted to VIEWVALUE LLC or any external servers.
+   Users are responsible for verifying this behavior in their deployment.
+
+2. INTEGRATION AND DERIVATIVE WORKS
+   If you integrate this software into your own applications, products,
+   services, or systems, or create derivative works:
+
+   - YOU assume ALL responsibility for that integration or derivative work
+   - YOU are solely responsible for ensuring compliance with applicable laws
+     and regulations (including but not limited to GDPR, HIPAA, CCPA, SOC2)
+   - YOU must conduct your own security and compliance assessment
+   - VIEWVALUE LLC provides NO WARRANTY that this software is suitable for
+     your specific use case or integration scenario
+   - VIEWVALUE LLC is NOT RESPONSIBLE for any issues arising from your
+     integration, modification, or distribution of this software
+   - VIEWVALUE LLC is NOT RESPONSIBLE for how you use this software with
+     your own data or your customers' data
+
+3. NO COMPLIANCE GUARANTEE
+   While this software is designed with privacy in mind (local processing),
+   VIEWVALUE LLC does NOT guarantee that use of this software will make
+   your application or system compliant with any specific regulation.
+   Compliance is YOUR responsibility.
+
+4. INDEMNIFICATION
+   By using this software, you agree to indemnify, defend, and hold harmless
+   VIEWVALUE LLC, its officers, directors, employees, and contributors from
+   any claims, damages, or expenses arising from your use of this software.
+
+---
+
 TRADEMARK NOTICE
 
 "EPH4" is a trademark of VIEWVALUE LLC.

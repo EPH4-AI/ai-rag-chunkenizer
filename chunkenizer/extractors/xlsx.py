@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - Excel Extractor
+AI RAG Chunkenizer - Excel Extractor
 Text extraction from .xlsx files using openpyxl and pandas.
 
 Copyright (c) 2025 VIEWVALUE LLC. All rights reserved.

@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - PowerPoint Extractor
+AI RAG Chunkenizer - PowerPoint Extractor
 Text extraction from .pptx files using python-pptx.
 Extracts text from slides, speaker notes, and tables.
 

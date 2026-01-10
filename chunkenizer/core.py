@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - Core Chunking Engine
+AI RAG Chunkenizer - Core Chunking Engine
 Token-aware text splitting for optimal RAG performance.
 A product of EPH4™ by VIEWVALUE LLC.
 

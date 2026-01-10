@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - CSV Extractor
+AI RAG Chunkenizer - CSV Extractor
 Text extraction from .csv files using pandas.
 
 Copyright (c) 2025 VIEWVALUE LLC. All rights reserved.

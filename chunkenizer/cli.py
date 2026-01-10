@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - Command Line Interface
+AI RAG Chunkenizer - Command Line Interface
 Process documents from the terminal.
 A product of EPH4™ by VIEWVALUE LLC.
 
@@ -28,7 +28,7 @@ from rich.panel import Panel
 from .core import Chunkenizer
 
 app = typer.Typer(
-    name="ai-chunkenizer",
+    name="ai-rag-chunkenizer",
     help="Fast, token-aware document chunking for RAG pipelines.",
     add_completion=False,
 )
@@ -65,7 +65,7 @@ def process(
 
     if not quiet:
         console.print(Panel.fit(
-            f"[bold blue]AI Chunkenizer[/bold blue]\n"
+            f"[bold blue]AI RAG Chunkenizer[/bold blue]\n"
             f"Processing: {path.name}",
             border_style="blue"
         ))
@@ -211,7 +211,7 @@ def info():
     Show supported file formats and configuration options.
     """
     console.print(Panel.fit(
-        "[bold blue]AI Chunkenizer[/bold blue]\n"
+        "[bold blue]AI RAG Chunkenizer[/bold blue]\n"
         "Fast, token-aware document chunking for RAG pipelines",
         border_style="blue"
     ))

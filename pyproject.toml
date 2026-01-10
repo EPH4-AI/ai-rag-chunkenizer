@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ai-chunkenizer"
+name = "ai-rag-chunkenizer"
 version = "1.0.0"
 description = "Fast, token-aware document chunking for RAG pipelines"
 readme = "README.md"
@@ -51,13 +51,13 @@ api = [
 ]
 
 [project.scripts]
-ai-chunkenizer = "chunkenizer.cli:main"
+ai-rag-chunkenizer = "chunkenizer.cli:main"
 
 [project.urls]
 Homepage = "https://eph4.ai"
-Documentation = "https://github.com/EPH4-AI/ai-chunkenizer#readme"
-Repository = "https://github.com/EPH4-AI/ai-chunkenizer"
-Issues = "https://github.com/EPH4-AI/ai-chunkenizer/issues"
+Documentation = "https://github.com/EPH4-AI/ai-rag-chunkenizer#readme"
+Repository = "https://github.com/EPH4-AI/ai-rag-chunkenizer"
+Issues = "https://github.com/EPH4-AI/ai-rag-chunkenizer/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

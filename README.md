@@ -1,4 +1,4 @@
-# AI Chunkenizer by EPH4™
+# AI RAG Chunkenizer by EPH4™
 
 **A product of VIEWVALUE LLC**
 
@@ -49,7 +49,7 @@ Fast, token-aware document chunking for RAG pipelines.
 
 ## Live Demo
 
-Try it in your browser: [AI Chunkenizer Demo](https://eph4-ai.github.io/ai-chunkenizer)
+Try it in your browser: [AI RAG Chunkenizer Demo](https://eph4-ai.github.io/ai-rag-chunkenizer)
 
 > **Privacy Note:** The browser demo processes files entirely on your device. No data is uploaded, stored, or transmitted to any server.
 
@@ -57,7 +57,7 @@ Try it in your browser: [AI Chunkenizer Demo](https://eph4-ai.github.io/ai-chunk
 
 ## Privacy & Compliance
 
-### How AI Chunkenizer Processes Your Files
+### How AI RAG Chunkenizer Processes Your Files
 
 #### Browser Demo - Step by Step Data Flow
 
@@ -112,7 +112,7 @@ Try it in your browser: [AI Chunkenizer Demo](https://eph4-ai.github.io/ai-chunk
 │ YOUR MACHINE (Everything happens here)                                       │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  $ ai-chunkenizer process document.pdf -o chunks.json                       │
+│  $ ai-rag-chunkenizer process document.pdf -o chunks.json                       │
 │                                                                             │
 │  1. Python reads file from YOUR local disk                                  │
 │  2. PyMuPDF/python-docx/openpyxl extract text locally                       │
@@ -128,7 +128,7 @@ Try it in your browser: [AI Chunkenizer Demo](https://eph4-ai.github.io/ai-chunk
 
 ### GDPR Compliance - Specific Legal Basis
 
-| GDPR Requirement | AI Chunkenizer Implementation |
+| GDPR Requirement | AI RAG Chunkenizer Implementation |
 |------------------|-------------------------------|
 | **Article 4 (Processing)** | No processing occurs on our systems. All operations run on user's device. |
 | **Article 6 (Lawful Basis)** | Not applicable - we don't process personal data. |
@@ -140,11 +140,11 @@ Try it in your browser: [AI Chunkenizer Demo](https://eph4-ai.github.io/ai-chunk
 | **Article 32 (Security)** | No server-side data = no server-side security requirements. |
 | **Article 33-34 (Breach Notification)** | Not applicable - no data to breach. |
 
-**Legal Position:** Under GDPR, AI Chunkenizer (browser demo) is equivalent to a user opening a file in Notepad. The software runs locally, and we have no more access to the file than Microsoft has when you use Notepad.
+**Legal Position:** Under GDPR, AI RAG Chunkenizer (browser demo) is equivalent to a user opening a file in Notepad. The software runs locally, and we have no more access to the file than Microsoft has when you use Notepad.
 
 ### SOC2 Compliance - Specific Controls
 
-| SOC2 Trust Principle | AI Chunkenizer Implementation |
+| SOC2 Trust Principle | AI RAG Chunkenizer Implementation |
 |----------------------|-------------------------------|
 | **Security** | No data in our possession = no data to secure. Client-side only. |
 | **Availability** | Static HTML hosted on GitHub Pages. No server processing to fail. |
@@ -171,14 +171,14 @@ Try it in your browser: [AI Chunkenizer Demo](https://eph4-ai.github.io/ai-chunk
 ## Installation
 
 ```bash
-pip install ai-chunkenizer
+pip install ai-rag-chunkenizer
 ```
 
 Or install from source:
 
 ```bash
-git clone https://github.com/EPH4-AI/ai-chunkenizer.git
-cd ai-chunkenizer
+git clone https://github.com/EPH4-AI/ai-rag-chunkenizer.git
+cd ai-rag-chunkenizer
 pip install -e .
 ```
 
@@ -208,19 +208,19 @@ for chunk in result.chunks:
 
 ```bash
 # Process a single file
-ai-chunkenizer process document.pdf -o chunks.json
+ai-rag-chunkenizer process document.pdf -o chunks.json
 
 # With custom settings
-ai-chunkenizer process report.xlsx --max-tokens 500 --overlap 50
+ai-rag-chunkenizer process report.xlsx --max-tokens 500 --overlap 50
 
 # Preview chunks
-ai-chunkenizer process data.csv --preview 3
+ai-rag-chunkenizer process data.csv --preview 3
 
 # Batch process a directory
-ai-chunkenizer batch ./documents/ -o ./output/
+ai-rag-chunkenizer batch ./documents/ -o ./output/
 
 # Show supported formats
-ai-chunkenizer info
+ai-rag-chunkenizer info
 ```
 
 ## Supported Formats
@@ -274,15 +274,15 @@ THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPL
 
 IN NO EVENT SHALL THE AUTHORS, COPYRIGHT HOLDERS, OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-### AI Chunkenizer Specific Disclaimers
+### AI RAG Chunkenizer Specific Disclaimers
 
-#### What AI Chunkenizer Does
+#### What AI RAG Chunkenizer Does
 - Extracts text from documents (PDF, DOCX, XLSX, CSV, PPTX)
 - Splits text into smaller chunks based on token count
 - Provides estimated token counts (not exact OpenAI token counts)
 - Outputs chunks in various formats (JSON, TXT, CSV, HTML)
 
-#### What AI Chunkenizer Does NOT Do
+#### What AI RAG Chunkenizer Does NOT Do
 - Does NOT guarantee accurate token counts (estimation only: ~4 chars per token)
 - Does NOT validate document contents for accuracy
 - Does NOT scan for malware, viruses, or malicious content
@@ -293,7 +293,7 @@ IN NO EVENT SHALL THE AUTHORS, COPYRIGHT HOLDERS, OR CONTRIBUTORS BE LIABLE FOR 
 
 #### No Responsibility for External Use
 
-The authors and maintainers of AI Chunkenizer:
+The authors and maintainers of AI RAG Chunkenizer:
 
 1. **Do not assume responsibility** for how third parties use, modify, or distribute this software
 2. **Do not guarantee** the accuracy, completeness, or reliability of document processing results
@@ -307,7 +307,7 @@ The authors and maintainers of AI Chunkenizer:
 
 ### User Responsibilities
 
-By using AI Chunkenizer, you agree that:
+By using AI RAG Chunkenizer, you agree that:
 
 1. **You are solely responsible** for evaluating whether this software meets your requirements
 2. **You are solely responsible** for verifying the accuracy of chunking output before using in downstream applications
@@ -319,7 +319,7 @@ By using AI Chunkenizer, you agree that:
 
 ### Third-Party Dependencies
 
-AI Chunkenizer uses these third-party libraries, each with their own licenses:
+AI RAG Chunkenizer uses these third-party libraries, each with their own licenses:
 
 | Library | License | Purpose |
 |---------|---------|---------|
@@ -339,7 +339,7 @@ Users are responsible for reviewing and complying with all applicable third-part
 
 ### Indemnification
 
-You agree to indemnify, defend, and hold harmless the authors, maintainers, and contributors of AI Chunkenizer from and against any claims, liabilities, damages, losses, and expenses arising from:
+You agree to indemnify, defend, and hold harmless the authors, maintainers, and contributors of AI RAG Chunkenizer from and against any claims, liabilities, damages, losses, and expenses arising from:
 - Your use of this software
 - Your violation of these terms
 - Your violation of any third-party rights
@@ -416,4 +416,4 @@ The MIT License grants rights to the software code only. It does not grant right
 
 ---
 
-**AI Chunkenizer** by **EPH4™** — A product of **VIEWVALUE LLC**
+**AI RAG Chunkenizer** by **EPH4™** — A product of **VIEWVALUE LLC**

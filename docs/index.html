@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chunkenizer - Document Chunking for RAG</title>
+    <title>AI RAG Chunkenizer - Document Chunking for RAG</title>
     <meta name="description" content="Fast, token-aware document chunking for RAG pipelines. Process PDF, Word, Excel, and more directly in your browser.">
 
     <!-- Google Fonts -->
@@ -159,44 +159,46 @@
         .config-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
             margin-bottom: 2rem;
         }
 
         .config-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
         }
 
         .config-row {
             display: flex;
-            gap: 2rem;
+            gap: 3rem;
             flex-wrap: wrap;
         }
 
         .config-item {
             flex: 1;
-            min-width: 200px;
+            min-width: 250px;
         }
 
         .config-item label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--text-secondary);
         }
 
         .config-item input {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.25rem;
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
         }
 
         .config-item input:focus {
@@ -544,7 +546,7 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">AI Chunkenizer</div>
+            <div class="logo">AI RAG Chunkenizer</div>
             <p class="tagline">Fast, token-aware document chunking for RAG pipelines</p>
             <p class="version-badge">Browser Demo v1.0.0</p>
             <div class="badges">
@@ -573,7 +575,7 @@
                 <span class="compliance-badge">Zero Data Collection</span>
             </div>
             <div class="privacy-text">
-                <strong>How AI Chunkenizer Processes Your Files:</strong><br>
+                <strong>How AI RAG Chunkenizer Processes Your Files:</strong><br>
                 1. You select a file → 2. Your browser reads it locally using JavaScript (PDF.js, Mammoth.js, SheetJS) →
                 3. Text is split into chunks in your browser's memory → 4. Results display on screen → 5. You close the tab, everything is gone.<br><br>
                 <strong>No server. No upload. No storage. Your file never leaves your device.</strong>
@@ -583,7 +585,7 @@
         <div class="config-section">
             <div class="config-title">Configuration</div>
             <div class="refresh-notice" id="refreshNotice" style="display: none; background: rgba(0, 243, 84, 0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
-                <strong style="color: var(--accent);">Privacy Notice:</strong> Since AI Chunkenizer doesn't store any data, you need to refresh your browser to upload a different document.
+                <strong style="color: var(--accent);">Privacy Notice:</strong> Since AI RAG Chunkenizer doesn't store any data, you need to refresh your browser to upload a different document.
             </div>
             <div class="config-row">
                 <div class="config-item">
@@ -633,7 +635,7 @@
 
             <!-- Data Practices Section -->
             <div class="data-practices">
-                <h3>AI Chunkenizer Technical Data Handling</h3>
+                <h3>AI RAG Chunkenizer Technical Data Handling</h3>
                 <div class="data-practices-grid">
                     <div class="data-practice-item">
                         <span class="data-practice-icon">&#10003;</span>
@@ -662,16 +664,16 @@
                 </div>
 
                 <div class="gdpr-box">
-                    <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--text-primary);">Why AI Chunkenizer is GDPR & SOC2 Compliant</h4>
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--text-primary);">Why AI RAG Chunkenizer is GDPR & SOC2 Compliant</h4>
                     <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
                         <strong>GDPR Compliance:</strong> Under GDPR, "processing" means any operation on personal data.
-                        AI Chunkenizer performs zero server-side processing - all operations occur on YOUR device using YOUR browser.
+                        AI RAG Chunkenizer performs zero server-side processing - all operations occur on YOUR device using YOUR browser.
                         We are not a "data controller" or "data processor" because we never receive, access, or store your data.
                         (GDPR Articles 4, 24, 25, 28)
                     </p>
                     <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
                         <strong>SOC2 Compliance:</strong> SOC2 controls (Security, Availability, Confidentiality) apply to data in our possession.
-                        Since AI Chunkenizer never receives your data, there is no data to secure on our infrastructure.
+                        Since AI RAG Chunkenizer never receives your data, there is no data to secure on our infrastructure.
                         The trust boundary exists entirely within your browser.
                     </p>
                     <p style="font-size: 0.8rem; color: var(--text-secondary);">
@@ -683,7 +685,7 @@
 
                 <div style="margin-top: 1.5rem; text-align: center; padding-top: 1rem; border-top: 1px solid var(--border);">
                     <p style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.25rem;">
-                        <strong>AI Chunkenizer</strong> by <strong style="color: var(--accent);">EPH4</strong>™
+                        <strong>AI RAG Chunkenizer</strong> by <strong style="color: var(--accent);">EPH4</strong>™
                     </p>
                     <p style="font-size: 0.75rem; color: var(--text-secondary);">
                         A product of VIEWVALUE LLC. All rights reserved.
@@ -698,22 +700,22 @@
                     This is the <strong>Browser Demo</strong>. For local processing in your Python projects, install the CLI/library:
                 </p>
                 <code style="display: block; background: var(--bg-secondary); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.75rem;">
-                    pip install ai-chunkenizer
+                    pip install ai-rag-chunkenizer
                 </code>
                 <p style="font-size: 0.8rem; color: var(--text-secondary);">
                     The Python package runs 100% locally with no external API calls.
                     Same privacy guarantees as this browser demo.
-                    <a href="https://github.com/EPH4-AI/ai-chunkenizer#installation" target="_blank" style="color: var(--accent);">View documentation →</a>
+                    <a href="https://github.com/EPH4-AI/ai-rag-chunkenizer#installation" target="_blank" style="color: var(--accent);">View documentation →</a>
                 </p>
             </div>
 
             <div class="cta-box">
                 <div class="cta-title">Want Embeddings, RAG & AI-Powered analysis without user management?</div>
-                <p class="cta-text">AI Chunkenizer is an open source live demo repository for chunkenizing documents for accurate AI analysis using RAG or LLM models on large documents.</p>
+                <p class="cta-text">AI RAG Chunkenizer is an open source live demo repository for chunkenizing documents for accurate AI analysis using RAG or LLM models on large documents.</p>
                 <a href="https://eph4.ai" class="cta-link" target="_blank">Try EPH4 — The first ephemeral RAG pipeline in the world →</a>
             </div>
 
-            <a href="https://github.com/EPH4-AI/ai-chunkenizer" class="github-link" target="_blank">
+            <a href="https://github.com/EPH4-AI/ai-rag-chunkenizer" class="github-link" target="_blank">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                 </svg>
@@ -722,7 +724,7 @@
 
             <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center;">
                 <p style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.5rem;">
-                    <strong>AI Chunkenizer</strong> by <strong style="color: var(--accent);">EPH4</strong>™
+                    <strong>AI RAG Chunkenizer</strong> by <strong style="color: var(--accent);">EPH4</strong>™
                 </p>
                 <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
                     Copyright © 2025 VIEWVALUE LLC. All rights reserved.
@@ -953,7 +955,7 @@
         // Download TXT
         document.getElementById('downloadTxt').addEventListener('click', () => {
             if (!window.chunkenResult) return;
-            let content = `AI Chunkenizer Output\n`;
+            let content = `AI RAG Chunkenizer Output\n`;
             content += `Source: ${window.chunkenResult.source}\n`;
             content += `Total Chunks: ${window.chunkenResult.total_chunks}\n`;
             content += `Total Tokens: ${window.chunkenResult.total_tokens}\n`;
@@ -1034,7 +1036,7 @@
 
             content += `
     <div class="footer">
-        Generated by <a href="https://github.com/EPH4-AI/ai-chunkenizer" target="_blank">AI Chunkenizer</a> — A product of VIEWVALUE LLC
+        Generated by <a href="https://github.com/EPH4-AI/ai-rag-chunkenizer" target="_blank">AI RAG Chunkenizer</a> — A product of VIEWVALUE LLC
     </div>
 </body>
 </html>`;

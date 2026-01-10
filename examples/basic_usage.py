@@ -1,10 +1,10 @@
 """
-AI Chunkenizer - Basic Usage Example
+AI RAG Chunkenizer - Basic Usage Example
 
 Copyright (c) 2025 VIEWVALUE LLC. All rights reserved.
 Licensed under the MIT License. See LICENSE file for details.
 
-This example demonstrates basic usage of the AI Chunkenizer library.
+This example demonstrates basic usage of the AI RAG Chunkenizer library.
 All processing happens locally on your machine.
 """
 
@@ -24,7 +24,7 @@ def main():
 
     # Or process raw text directly
     sample_text = """
-    This is a sample document that demonstrates how the AI Chunkenizer
+    This is a sample document that demonstrates how the AI RAG Chunkenizer
     works. It will split this text into smaller chunks that are suitable
     for embedding models and RAG pipelines.
 

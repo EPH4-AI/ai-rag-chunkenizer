@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - Word Document Extractor
+AI RAG Chunkenizer - Word Document Extractor
 Text extraction from .docx files using python-docx.
 
 Copyright (c) 2025 VIEWVALUE LLC. All rights reserved.

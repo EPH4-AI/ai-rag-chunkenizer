@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - PDF Extractor
+AI RAG Chunkenizer - PDF Extractor
 Text extraction using PyMuPDF (fitz).
 
 Copyright (c) 2025 VIEWVALUE LLC. All rights reserved.

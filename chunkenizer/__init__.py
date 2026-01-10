@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - Fast, token-aware document chunking for RAG pipelines.
+AI RAG Chunkenizer - Fast, token-aware document chunking for RAG pipelines.
 A product of EPH4™ by VIEWVALUE LLC.
 
 Copyright (c) 2025 VIEWVALUE LLC. All rights reserved.
@@ -23,7 +23,7 @@ Usage:
     for chunk in result.chunks:
         print(chunk.text)
 
-For more information: https://github.com/EPH4-AI/ai-chunkenizer
+For more information: https://github.com/EPH4-AI/ai-rag-chunkenizer
 """
 
 from .core import Chunkenizer, ChunkResult, Chunk

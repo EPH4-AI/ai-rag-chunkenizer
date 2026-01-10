@@ -1,5 +1,5 @@
 """
-AI Chunkenizer - Document Extractors
+AI RAG Chunkenizer - Document Extractors
 Text extraction for PDF, Word, Excel, CSV, and PowerPoint files.
 A product of EPH4™ by VIEWVALUE LLC.
 

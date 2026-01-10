@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chunkenizer - Document Chunking for RAG</title>
+    <meta name="description" content="Fast, token-aware document chunking for RAG pipelines. Process PDF, Word, Excel, and more directly in your browser.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- PDF.js for PDF extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <!-- Mammoth.js for DOCX extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+    <!-- SheetJS for Excel/CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: #111111;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent: #00f354;
+            --accent-hover: #00ff5a;
+            --success: #00f354;
+            --border: #222222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6, .logo, .chunks-title, .config-title, .cta-title {
+            font-family: 'Inconsolata', monospace;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 4rem;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                padding: 2rem;
+            }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px solid #6366f1;
+            color: #6366f1;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-line {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .product-line strong {
+            color: var(--accent);
+        }
+
+        .badges {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(0, 243, 84, 0.1);
+            border: 1px solid var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .upload-zone {
+            background: var(--bg-card);
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .config-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .config-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .config-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .config-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .config-item label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .config-item input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .config-item input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.visible {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .chunks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chunks-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .download-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .download-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .download-btn.secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .download-btn.secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--accent);
+        }
+
+        .reprocess-btn {
+            margin-top: 1rem;
+            background: var(--accent);
+            color: #000000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.3s;
+        }
+
+        .reprocess-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Privacy & Compliance Styles */
+        .privacy-banner {
+            background: linear-gradient(135deg, rgba(0, 243, 84, 0.05), rgba(0, 243, 84, 0.1));
+            border: 1px solid rgba(0, 243, 84, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .privacy-badges {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .compliance-badge {
+            background: rgba(0, 243, 84, 0.15);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .privacy-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .privacy-text strong {
+            color: var(--accent);
+        }
+
+        .data-practices {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .data-practices h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .data-practices-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .data-practices-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .data-practices-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .data-practice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .data-practice-icon {
+            color: #22c55e;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .data-practice-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .privacy-disclaimer-heading {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .gdpr-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .chunks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .chunk-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .chunk-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .chunk-index {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .chunk-tokens {
+            color: var(--text-secondary);
+        }
+
+        .chunk-text {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 150px;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .processing {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .processing.visible {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .cta-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-text {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .cta-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .cta-link:hover {
+            text-decoration: underline;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .github-link:hover {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .upload-zone {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">AI Chunkenizer</div>
+            <p class="tagline">Fast, token-aware document chunking for RAG pipelines</p>
+            <p class="version-badge">Browser Demo v1.0.0</p>
+            <div class="badges">
+                <span class="badge">PDF</span>
+                <span class="badge">Word</span>
+                <span class="badge">Excel</span>
+                <span class="badge">CSV</span>
+                <span class="badge">100% Client-Side</span>
+            </div>
+            <p class="product-line">by <strong>EPH4</strong>™ — A product of <strong>VIEWVALUE LLC</strong></p>
+        </header>
+
+        <div class="upload-zone" id="uploadZone">
+            <div class="upload-icon">📄</div>
+            <div class="upload-text">Drop your document here</div>
+            <div class="upload-hint">or click to browse • PDF, DOCX, XLSX, CSV supported</div>
+            <input type="file" class="file-input" id="fileInput" accept=".pdf,.docx,.xlsx,.xls,.csv">
+        </div>
+
+        <!-- Privacy & Compliance Notice -->
+        <div class="privacy-banner">
+            <div class="privacy-badges">
+                <span class="compliance-badge">GDPR Compliant</span>
+                <span class="compliance-badge">SOC2 Compliant</span>
+                <span class="compliance-badge">Zero Data Collection</span>
+            </div>
+            <div class="privacy-text">
+                <strong>How AI Chunkenizer Processes Your Files:</strong><br>
+                1. You select a file → 2. Your browser reads it locally using JavaScript (PDF.js, Mammoth.js, SheetJS) →
+                3. Text is split into chunks in your browser's memory → 4. Results display on screen → 5. You close the tab, everything is gone.<br><br>
+                <strong>No server. No upload. No storage. Your file never leaves your device.</strong>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <div class="config-title">Configuration</div>
+            <div class="config-row">
+                <div class="config-item">
+                    <label for="maxTokens">Max Tokens per Chunk</label>
+                    <input type="number" id="maxTokens" value="1000" min="100" max="8000">
+                </div>
+                <div class="config-item">
+                    <label for="overlapTokens">Overlap Tokens</label>
+                    <input type="number" id="overlapTokens" value="100" min="0" max="500">
+                </div>
+            </div>
+            <button class="reprocess-btn" id="reprocessBtn" style="display:none;">Apply New Settings</button>
+        </div>
+
+        <div class="processing" id="processing">
+            <div class="spinner"></div>
+            <div>Processing document...</div>
+        </div>
+
+        <div class="results-section" id="results">
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats populated by JS -->
+            </div>
+
+            <div class="chunks-header">
+                <div class="chunks-title">Chunks</div>
+                <div class="download-buttons">
+                    <button class="download-btn" id="downloadJson">JSON</button>
+                    <button class="download-btn secondary" id="downloadTxt">TXT</button>
+                    <button class="download-btn secondary" id="downloadCsv">CSV</button>
+                    <button class="download-btn secondary" id="downloadHtml">HTML</button>
+                </div>
+            </div>
+
+            <div class="chunks-list" id="chunksList">
+                <!-- Chunks populated by JS -->
+            </div>
+        </div>
+
+        <footer>
+            <!-- Privacy Disclaimer Section -->
+            <h2 class="privacy-disclaimer-heading">Privacy Disclaimer</h2>
+
+            <!-- Data Practices Section -->
+            <div class="data-practices">
+                <h3>AI Chunkenizer Technical Data Handling</h3>
+                <div class="data-practices-grid">
+                    <div class="data-practice-item">
+                        <span class="data-practice-icon">&#10003;</span>
+                        <span class="data-practice-text"><strong>File Reading:</strong> JavaScript FileReader API reads your file into browser memory only</span>
+                    </div>
+                    <div class="data-practice-item">
+                        <span class="data-practice-icon">&#10003;</span>
+                        <span class="data-practice-text"><strong>Text Extraction:</strong> PDF.js, Mammoth.js, SheetJS run locally in your browser - no external calls</span>
+                    </div>
+                    <div class="data-practice-item">
+                        <span class="data-practice-icon">&#10003;</span>
+                        <span class="data-practice-text"><strong>Chunking Algorithm:</strong> JavaScript splits text in browser memory using word boundaries</span>
+                    </div>
+                    <div class="data-practice-item">
+                        <span class="data-practice-icon">&#10003;</span>
+                        <span class="data-practice-text"><strong>Token Counting:</strong> Estimated locally (4 chars ≈ 1 token) - no API calls to OpenAI</span>
+                    </div>
+                    <div class="data-practice-item">
+                        <span class="data-practice-icon">&#10003;</span>
+                        <span class="data-practice-text"><strong>Download Files:</strong> Generated in-browser using Blob API - no server involved</span>
+                    </div>
+                    <div class="data-practice-item">
+                        <span class="data-practice-icon">&#10003;</span>
+                        <span class="data-practice-text"><strong>Memory Cleanup:</strong> Browser garbage collection clears data when tab closes</span>
+                    </div>
+                </div>
+
+                <div class="gdpr-box">
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--text-primary);">Why AI Chunkenizer is GDPR & SOC2 Compliant</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                        <strong>GDPR Compliance:</strong> Under GDPR, "processing" means any operation on personal data.
+                        AI Chunkenizer performs zero server-side processing - all operations occur on YOUR device using YOUR browser.
+                        We are not a "data controller" or "data processor" because we never receive, access, or store your data.
+                        (GDPR Articles 4, 24, 25, 28)
+                    </p>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                        <strong>SOC2 Compliance:</strong> SOC2 controls (Security, Availability, Confidentiality) apply to data in our possession.
+                        Since AI Chunkenizer never receives your data, there is no data to secure on our infrastructure.
+                        The trust boundary exists entirely within your browser.
+                    </p>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                        <strong>Verification:</strong> This page contains no backend. View source code to confirm:
+                        zero fetch/XMLHttpRequest calls to external servers for your file data.
+                        The only external resources are the JavaScript libraries loaded from CDN (code only, not your data).
+                    </p>
+                </div>
+
+                <div style="margin-top: 1.5rem; text-align: center; padding-top: 1rem; border-top: 1px solid var(--border);">
+                    <p style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.25rem;">
+                        <strong>AI Chunkenizer</strong> by <strong style="color: var(--accent);">EPH4</strong>™
+                    </p>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary);">
+                        A product of VIEWVALUE LLC. All rights reserved.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Python Package Notice -->
+            <div class="python-notice" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.75rem; color: var(--text-primary);">Need the Python Library?</h3>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    This is the <strong>Browser Demo</strong>. For local processing in your Python projects, install the CLI/library:
+                </p>
+                <code style="display: block; background: var(--bg-secondary); padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.75rem;">
+                    pip install ai-chunkenizer
+                </code>
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                    The Python package runs 100% locally with no external API calls.
+                    Same privacy guarantees as this browser demo.
+                    <a href="https://github.com/EPH4-AI/ai-chunkenizer#installation" target="_blank" style="color: var(--accent);">View documentation →</a>
+                </p>
+            </div>
+
+            <div class="cta-box">
+                <div class="cta-title">Want Embeddings, RAG & AI-Powered analysis without user management?</div>
+                <p class="cta-text">AI Chunkenizer is an open source live demo repository for chunkenizing documents for accurate AI analysis using RAG or LLM models on large documents.</p>
+                <a href="https://eph4.ai" class="cta-link" target="_blank">Try EPH4 — The first ephemeral RAG pipeline in the world →</a>
+            </div>
+
+            <a href="https://github.com/EPH4-AI/ai-chunkenizer" class="github-link" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                View on GitHub
+            </a>
+
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center;">
+                <p style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+                    <strong>AI Chunkenizer</strong> by <strong style="color: var(--accent);">EPH4</strong>™
+                </p>
+                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                    Copyright © 2025 VIEWVALUE LLC. All rights reserved.
+                </p>
+                <p style="font-size: 0.7rem; color: var(--text-secondary);">
+                    Released under MIT License. Open source software provided "as is" without warranty.<br>
+                    EPH4™ is a trademark of VIEWVALUE LLC.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // Simple token estimation (avg 4 chars per token for English)
+        function estimateTokens(text) {
+            return Math.ceil(text.length / 4);
+        }
+
+        // Chunk text with word boundaries
+        function chunkText(text, maxTokens, overlapTokens) {
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            const chunks = [];
+            let currentWords = [];
+            let currentTokens = 0;
+            const overlapWords = Math.floor(overlapTokens / 2); // ~2 tokens per word avg
+
+            for (const word of words) {
+                const wordTokens = estimateTokens(word + ' ');
+
+                if (currentTokens + wordTokens > maxTokens && currentWords.length > 0) {
+                    // Save chunk
+                    const chunkText = currentWords.join(' ');
+                    chunks.push({
+                        index: chunks.length,
+                        text: chunkText,
+                        token_count: estimateTokens(chunkText),
+                        char_count: chunkText.length
+                    });
+
+                    // Start new chunk with overlap
+                    currentWords = currentWords.slice(-overlapWords);
+                    currentTokens = currentWords.reduce((sum, w) => sum + estimateTokens(w + ' '), 0);
+                }
+
+                currentWords.push(word);
+                currentTokens += wordTokens;
+            }
+
+            // Last chunk
+            if (currentWords.length > 0) {
+                const chunkText = currentWords.join(' ');
+                chunks.push({
+                    index: chunks.length,
+                    text: chunkText,
+                    token_count: estimateTokens(chunkText),
+                    char_count: chunkText.length
+                });
+            }
+
+            return chunks;
+        }
+
+        // Extract text from PDF
+        async function extractPDF(arrayBuffer) {
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let text = '';
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = content.items.map(item => item.str).join(' ');
+                text += `[Page ${i}]\n${pageText}\n\n`;
+            }
+
+            return text;
+        }
+
+        // Extract text from DOCX
+        async function extractDOCX(arrayBuffer) {
+            const result = await mammoth.extractRawText({ arrayBuffer });
+            return result.value;
+        }
+
+        // Extract text from Excel/CSV
+        function extractSpreadsheet(arrayBuffer, filename) {
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            let text = '';
+
+            for (const sheetName of workbook.SheetNames) {
+                const sheet = workbook.Sheets[sheetName];
+                const csv = XLSX.utils.sheet_to_csv(sheet);
+                text += `[Sheet: ${sheetName}]\n${csv}\n\n`;
+            }
+
+            return text;
+        }
+
+        // Main processing
+        async function processFile(file) {
+            const uploadZone = document.getElementById('uploadZone');
+            const processing = document.getElementById('processing');
+            const results = document.getElementById('results');
+
+            uploadZone.style.display = 'none';
+            processing.classList.add('visible');
+            results.classList.remove('visible');
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const ext = file.name.split('.').pop().toLowerCase();
+                let text = '';
+
+                // Extract based on file type
+                if (ext === 'pdf') {
+                    text = await extractPDF(arrayBuffer);
+                } else if (ext === 'docx') {
+                    text = await extractDOCX(arrayBuffer);
+                } else if (['xlsx', 'xls', 'csv'].includes(ext)) {
+                    text = extractSpreadsheet(arrayBuffer, file.name);
+                } else {
+                    throw new Error('Unsupported file type');
+                }
+
+                // Get config
+                const maxTokens = parseInt(document.getElementById('maxTokens').value) || 1000;
+                const overlapTokens = parseInt(document.getElementById('overlapTokens').value) || 100;
+
+                // Chunk the text
+                const chunks = chunkText(text, maxTokens, overlapTokens);
+
+                // Calculate stats
+                const totalTokens = chunks.reduce((sum, c) => sum + c.token_count, 0);
+                const totalChars = chunks.reduce((sum, c) => sum + c.char_count, 0);
+
+                // Store result for download
+                window.chunkenResult = {
+                    source: file.name,
+                    total_chunks: chunks.length,
+                    total_tokens: totalTokens,
+                    total_chars: totalChars,
+                    config: { max_tokens: maxTokens, overlap_tokens: overlapTokens },
+                    chunks: chunks
+                };
+
+                // Store raw text for re-processing
+                window.rawExtractedText = text;
+                window.currentFileName = file.name;
+
+                // Show reprocess button
+                document.getElementById('reprocessBtn').style.display = 'block';
+
+                // Display stats
+                const statsGrid = document.getElementById('statsGrid');
+                statsGrid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${chunks.length}</div>
+                        <div class="stat-label">Chunks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalTokens.toLocaleString()}</div>
+                        <div class="stat-label">Total Tokens</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalChars.toLocaleString()}</div>
+                        <div class="stat-label">Characters</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Math.round(totalTokens / chunks.length)}</div>
+                        <div class="stat-label">Avg Tokens/Chunk</div>
+                    </div>
+                `;
+
+                // Display chunks
+                const chunksList = document.getElementById('chunksList');
+                chunksList.innerHTML = chunks.map(chunk => `
+                    <div class="chunk-card">
+                        <div class="chunk-header">
+                            <span class="chunk-index">Chunk ${chunk.index + 1}</span>
+                            <span class="chunk-tokens">${chunk.token_count} tokens • ${chunk.char_count} chars</span>
+                        </div>
+                        <div class="chunk-text">${escapeHtml(chunk.text.substring(0, 500))}${chunk.text.length > 500 ? '...' : ''}</div>
+                    </div>
+                `).join('');
+
+                processing.classList.remove('visible');
+                results.classList.add('visible');
+
+            } catch (error) {
+                console.error(error);
+                alert('Error processing file: ' + error.message);
+                processing.classList.remove('visible');
+                uploadZone.style.display = 'block';
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Download helper
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function getBaseName() {
+            return window.chunkenResult.source.replace(/\.[^/.]+$/, '');
+        }
+
+        // Download JSON
+        document.getElementById('downloadJson').addEventListener('click', () => {
+            if (!window.chunkenResult) return;
+            const content = JSON.stringify(window.chunkenResult, null, 2);
+            downloadFile(content, getBaseName() + '_chunks.json', 'application/json');
+        });
+
+        // Download TXT
+        document.getElementById('downloadTxt').addEventListener('click', () => {
+            if (!window.chunkenResult) return;
+            let content = `AI Chunkenizer Output\n`;
+            content += `Source: ${window.chunkenResult.source}\n`;
+            content += `Total Chunks: ${window.chunkenResult.total_chunks}\n`;
+            content += `Total Tokens: ${window.chunkenResult.total_tokens}\n`;
+            content += `Config: max_tokens=${window.chunkenResult.config.max_tokens}, overlap=${window.chunkenResult.config.overlap_tokens}\n`;
+            content += `${'='.repeat(60)}\n\n`;
+
+            window.chunkenResult.chunks.forEach(chunk => {
+                content += `--- CHUNK ${chunk.index + 1} (${chunk.token_count} tokens) ---\n`;
+                content += chunk.text + '\n\n';
+            });
+
+            downloadFile(content, getBaseName() + '_chunks.txt', 'text/plain');
+        });
+
+        // Download CSV
+        document.getElementById('downloadCsv').addEventListener('click', () => {
+            if (!window.chunkenResult) return;
+
+            // CSV header
+            let content = 'chunk_index,token_count,char_count,text\n';
+
+            // CSV rows
+            window.chunkenResult.chunks.forEach(chunk => {
+                const escapedText = '"' + chunk.text.replace(/"/g, '""') + '"';
+                content += `${chunk.index},${chunk.token_count},${chunk.char_count},${escapedText}\n`;
+            });
+
+            downloadFile(content, getBaseName() + '_chunks.csv', 'text/csv');
+        });
+
+        // Download HTML
+        document.getElementById('downloadHtml').addEventListener('click', () => {
+            if (!window.chunkenResult) return;
+
+            let content = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chunks - ${window.chunkenResult.source}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 900px; margin: 0 auto; padding: 2rem; background: #f5f5f5; }
+        h1 { color: #333; }
+        .stats { display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .stat { background: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: #6366f1; }
+        .stat-label { color: #666; font-size: 0.9rem; }
+        .chunk { background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .chunk-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; color: #666; }
+        .chunk-index { font-weight: bold; color: #6366f1; }
+        .chunk-text { white-space: pre-wrap; font-family: monospace; font-size: 0.85rem; background: #f9f9f9; padding: 1rem; border-radius: 4px; }
+        .footer { text-align: center; margin-top: 2rem; color: #999; }
+        .footer a { color: #6366f1; }
+    </style>
+</head>
+<body>
+    <h1>Chunked Document</h1>
+    <p><strong>Source:</strong> ${window.chunkenResult.source}</p>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-value">${window.chunkenResult.total_chunks}</div><div class="stat-label">Chunks</div></div>
+        <div class="stat"><div class="stat-value">${window.chunkenResult.total_tokens.toLocaleString()}</div><div class="stat-label">Tokens</div></div>
+        <div class="stat"><div class="stat-value">${window.chunkenResult.total_chars.toLocaleString()}</div><div class="stat-label">Characters</div></div>
+    </div>
+
+    <h2>Chunks</h2>
+`;
+
+            window.chunkenResult.chunks.forEach(chunk => {
+                content += `    <div class="chunk">
+        <div class="chunk-header">
+            <span class="chunk-index">Chunk ${chunk.index + 1}</span>
+            <span>${chunk.token_count} tokens | ${chunk.char_count} chars</span>
+        </div>
+        <div class="chunk-text">${escapeHtml(chunk.text)}</div>
+    </div>\n`;
+            });
+
+            content += `
+    <div class="footer">
+        Generated by <a href="https://github.com/EPH4-AI/ai-chunkenizer" target="_blank">AI Chunkenizer</a> — A product of VIEWVALUE LLC
+    </div>
+</body>
+</html>`;
+
+            downloadFile(content, getBaseName() + '_chunks.html', 'text/html');
+        });
+
+        // Reprocess with new settings
+        document.getElementById('reprocessBtn').addEventListener('click', () => {
+            if (!window.rawExtractedText) return;
+
+            const maxTokens = parseInt(document.getElementById('maxTokens').value) || 1000;
+            const overlapTokens = parseInt(document.getElementById('overlapTokens').value) || 100;
+
+            // Re-chunk with new settings
+            const chunks = chunkText(window.rawExtractedText, maxTokens, overlapTokens);
+
+            const totalTokens = chunks.reduce((sum, c) => sum + c.token_count, 0);
+            const totalChars = chunks.reduce((sum, c) => sum + c.char_count, 0);
+
+            // Update result
+            window.chunkenResult = {
+                source: window.currentFileName,
+                total_chunks: chunks.length,
+                total_tokens: totalTokens,
+                total_chars: totalChars,
+                config: { max_tokens: maxTokens, overlap_tokens: overlapTokens },
+                chunks: chunks
+            };
+
+            // Update display
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${chunks.length}</div>
+                    <div class="stat-label">Chunks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${totalTokens.toLocaleString()}</div>
+                    <div class="stat-label">Total Tokens</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${totalChars.toLocaleString()}</div>
+                    <div class="stat-label">Characters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Math.round(totalTokens / chunks.length)}</div>
+                    <div class="stat-label">Avg Tokens/Chunk</div>
+                </div>
+            `;
+
+            document.getElementById('chunksList').innerHTML = chunks.map(chunk => `
+                <div class="chunk-card">
+                    <div class="chunk-header">
+                        <span class="chunk-index">Chunk ${chunk.index + 1}</span>
+                        <span class="chunk-tokens">${chunk.token_count} tokens | ${chunk.char_count} chars</span>
+                    </div>
+                    <div class="chunk-text">${escapeHtml(chunk.text.substring(0, 500))}${chunk.text.length > 500 ? '...' : ''}</div>
+                </div>
+            `).join('');
+        });
+
+        // File input handlers
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) processFile(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) processFile(file);
+        });
+    </script>
+</body>
+</html>

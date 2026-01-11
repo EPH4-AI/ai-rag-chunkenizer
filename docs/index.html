@@ -73,6 +73,15 @@
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .logo-subtitle {
+            font-family: 'Inconsolata', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
         }
 
         .tagline {
@@ -528,6 +537,14 @@
             color: var(--text-primary);
         }
 
+        /* Tablet and mobile: footer boxes same width as content above */
+        @media (max-width: 1024px) {
+            footer {
+                padding: 0;
+                margin-top: 2rem;
+            }
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
@@ -535,6 +552,7 @@
 
             .logo {
                 font-size: 2rem;
+                margin-top: 1rem;
             }
 
             .upload-zone {
@@ -546,7 +564,8 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">AI RAG Chunkenizer</div>
+            <h1 class="logo">Open Source - Retrieval Augmented Generation</h1>
+            <div class="logo-subtitle">AI RAG Chunkenizer</div>
             <p class="tagline">Fast, token-aware document chunking for RAG pipelines</p>
             <p class="version-badge">Browser Demo v1.0.0</p>
             <div class="badges">

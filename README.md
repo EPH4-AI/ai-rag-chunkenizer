@@ -53,6 +53,9 @@ Try it in your browser: [AI RAG Chunkenizer Demo](https://eph4-ai.github.io/ai-r
 
 > **Privacy Note:** The browser demo processes files entirely on your device. No data is uploaded, stored, or transmitted to any server.
 
+<img width="1539" height="1112" alt="image" src="https://github.com/user-attachments/assets/465e1af6-9a3b-473e-9e17-cf7ffeaaaf6c" />
+
+
 ---
 
 ## Privacy & Compliance
